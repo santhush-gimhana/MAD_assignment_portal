@@ -1,0 +1,285 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>PST 21111 Assignment Portal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one centred column — course header, upload panel, prep steps, file-name helper */
+:root {
+  --bg: #F1F4F2;
+  --surface: #FFFFFF;
+  --ink: #13201B;
+  --muted: #56655F;
+  --line: #D4DDD8;
+  --accent: #0A7458;
+  --accent-ink: #FFFFFF;
+  --accent-soft: #E1F0EA;
+  --off-bg: #E3E8E5;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1412; --surface: #151F1C; --ink: #E4ECE8; --muted: #95A59F; --line: #29372F;
+    --accent: #3CC594; --accent-ink: #062419; --accent-soft: #17362B; --off-bg: #1F2A26;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1412; --surface: #151F1C; --ink: #E4ECE8; --muted: #95A59F; --line: #29372F;
+  --accent: #3CC594; --accent-ink: #062419; --accent-soft: #17362B; --off-bg: #1F2A26;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.wrap {
+  max-width: 680px;
+  margin: 0 auto;
+  padding-inline: 20px;
+  padding-block: 48px 64px;
+  display: grid;
+  gap: 36px;
+}
+
+/* Header */
+.course { display: grid; gap: 12px; }
+.meta {
+  display: flex; flex-wrap: wrap; gap: 8px; margin: 0;
+  font-family: var(--mono); font-size: 13px; letter-spacing: 0.02em;
+}
+.meta span {
+  padding: 4px 10px; border-radius: 6px;
+  border: 1px solid var(--line); color: var(--muted); background: var(--surface);
+}
+.meta .code { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); font-weight: 500; }
+h1 {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(32px, 7vw, 48px); line-height: 1.05; letter-spacing: -0.02em;
+  margin: 0; text-wrap: balance;
+}
+.lede { margin: 0; color: var(--muted); max-width: 52ch; }
+
+h2 {
+  font-family: var(--display); font-weight: 600;
+  font-size: 22px; line-height: 1.2; margin: 0; text-wrap: balance;
+}
+
+/* Upload panel */
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 28px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px 24px;
+  align-items: start;
+}
+.panel > .body { display: grid; gap: 14px; min-width: 0; }
+.panel p { margin: 0; color: var(--muted); }
+.zip { width: 64px; height: 80px; color: var(--accent); }
+.btn {
+  justify-self: start;
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 14px 22px; border-radius: 10px;
+  background: var(--accent); color: var(--accent-ink);
+  font: 600 16px/1.2 var(--body); text-decoration: none;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.btn svg { width: 18px; height: 18px; flex: none; }
+.btn:hover { box-shadow: 0 6px 18px -8px var(--accent); transform: translateY(-1px); }
+.btn:focus-visible, .copy:focus-visible, input:focus-visible {
+  outline: 3px solid var(--accent); outline-offset: 3px;
+}
+.btn.is-off {
+  background: var(--off-bg); color: var(--muted); cursor: not-allowed;
+  box-shadow: none; transform: none;
+}
+.status { font-size: 14px; }
+
+/* Steps */
+.steps { display: grid; gap: 16px; }
+.steps ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.steps li {
+  counter-increment: s;
+  display: grid; grid-template-columns: 36px 1fr; gap: 14px;
+  padding-block: 16px; border-top: 1px solid var(--line);
+}
+.steps li:last-child { border-bottom: 1px solid var(--line); }
+.steps li::before {
+  content: counter(s);
+  width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--accent-soft); color: var(--accent);
+  font: 600 14px/1 var(--mono);
+}
+.steps li > div { min-width: 0; }
+.steps strong { display: block; font-weight: 600; }
+.steps p { margin: 2px 0 0; color: var(--muted); }
+code {
+  font-family: var(--mono); font-size: 0.88em;
+  background: var(--off-bg); padding: 1px 6px; border-radius: 4px;
+  overflow-wrap: anywhere;
+}
+
+/* File-name helper */
+.namer {
+  display: grid; gap: 12px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 16px; padding: 24px;
+}
+.namer p { margin: 0; color: var(--muted); }
+label { font-weight: 500; font-size: 14px; }
+input {
+  width: 100%; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: 10px;
+  background: var(--bg); color: var(--ink);
+  font: 400 16px/1.3 var(--mono);
+}
+.result {
+  display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 12px 14px; border-radius: 10px; background: var(--accent-soft);
+}
+.result code {
+  background: none; padding: 0; font-size: 15px; font-weight: 500;
+  color: var(--ink); flex: 1 1 200px; min-width: 0;
+}
+.copy {
+  padding: 8px 14px; border-radius: 8px; border: 1px solid var(--accent);
+  background: var(--surface); color: var(--accent);
+  font: 600 14px/1 var(--body); cursor: pointer;
+}
+.hint { font-size: 14px; }
+
+footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 20px; }
+
+@media (max-width: 480px) {
+  .panel { grid-template-columns: 1fr; padding: 22px; }
+  .zip { width: 48px; height: 60px; }
+  .btn { justify-self: stretch; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+  .btn:hover { transform: none; }
+}
+</style>
+
+<main class="wrap">
+  <header class="course">
+    <p class="meta"><span class="code">PST 21111</span><span>Year II</span><span>Semester I</span></p>
+    <h1>Mobile Application Development</h1>
+    <p class="lede">Assignment submission. Upload your complete project as one .zip file.</p>
+  </header>
+
+  <section class="panel" aria-labelledby="submit-h">
+    <svg class="zip" viewBox="0 0 64 80" fill="none" aria-hidden="true">
+      <path d="M6 4h36l16 16v54a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" fill="var(--accent-soft)" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M42 4v14a2 2 0 0 0 2 2h14" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+      <g fill="currentColor">
+        <rect x="22" y="8" width="8" height="5" rx="1"/>
+        <rect x="30" y="15" width="8" height="5" rx="1"/>
+        <rect x="22" y="22" width="8" height="5" rx="1"/>
+        <rect x="30" y="29" width="8" height="5" rx="1"/>
+        <rect x="22" y="36" width="8" height="5" rx="1"/>
+        <rect x="24" y="46" width="12" height="16" rx="3"/>
+      </g>
+      <rect x="27" y="52" width="6" height="6" rx="1" fill="var(--surface)"/>
+    </svg>
+    <div class="body">
+      <h2 id="submit-h">Submit your assignment</h2>
+      <p>One .zip file per student. The button opens the Dropbox upload page in a new tab.</p>
+      <a id="submit-link" class="btn" href="https://www.dropbox.com/request/ow8iu4rsyfcfx2ulvck0" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M6 10l6-6 6 6"/><path d="M4 20h16"/></svg>
+        <span class="label">Upload .zip to Dropbox</span>
+      </a>
+      <p id="link-status" class="status" hidden>The upload link isn't open yet. Check back here later.</p>
+    </div>
+  </section>
+
+  <section class="steps" aria-labelledby="prep-h">
+    <h2 id="prep-h">Before you upload</h2>
+    <ol>
+      <li><div><strong>Clean the project</strong><p>Delete build output to keep the file small, for example <code>app/build</code>, <code>build</code> and <code>.gradle</code> in an Android Studio project, or <code>build</code> in a Flutter project.</p></div></li>
+      <li><div><strong>Compress the whole project folder</strong><p>Make one .zip file containing the full project folder. Do not use .rar or .7z.</p></div></li>
+      <li><div><strong>Name the file with your registration number</strong><p>Use the helper below to get the exact file name.</p></div></li>
+      <li><div><strong>Check it, then upload</strong><p>Open the .zip once to make sure it extracts, then use the upload button above.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="namer" aria-labelledby="name-h">
+    <h2 id="name-h">Your file name</h2>
+    <label for="regno">Registration number</label>
+    <input id="regno" type="text" autocomplete="off" spellcheck="false" placeholder="Type your registration number">
+    <div class="result">
+      <code id="fname">PST21111_RegNo.zip</code>
+      <button id="copy" class="copy" type="button">Copy</button>
+    </div>
+    <p class="hint">Slashes and spaces become hyphens, because file names can't contain "/".</p>
+  </section>
+
+  <footer>Trouble uploading? Tell your demonstrator before the deadline.</footer>
+</main>
+
+<script>
+(function () {
+  var link = document.getElementById('submit-link');
+  var href = link.getAttribute('href') || '';
+  if (!/^https?:\/\//i.test(href)) {
+    link.removeAttribute('href');
+    link.removeAttribute('target');
+    link.setAttribute('aria-disabled', 'true');
+    link.classList.add('is-off');
+    link.querySelector('.label').textContent = 'Upload link not open yet';
+    document.getElementById('link-status').hidden = false;
+  }
+
+  var input = document.getElementById('regno');
+  var out = document.getElementById('fname');
+  var copyBtn = document.getElementById('copy');
+
+  function fileName() {
+    var v = input.value.trim().toUpperCase()
+      .replace(/[\/\\\s]+/g, '-')
+      .replace(/[^A-Z0-9._-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+    return 'PST21111_' + (v || 'RegNo') + '.zip';
+  }
+  input.addEventListener('input', function () {
+    out.textContent = fileName();
+    copyBtn.textContent = 'Copy';
+  });
+
+  function selectName() {
+    var r = document.createRange();
+    r.selectNodeContents(out);
+    var s = window.getSelection();
+    s.removeAllRanges();
+    s.addRange(r);
+  }
+  copyBtn.addEventListener('click', function () {
+    var text = out.textContent;
+    try {
+      navigator.clipboard.writeText(text).then(function () {
+        copyBtn.textContent = 'Copied';
+      }, function () {
+        selectName();
+        copyBtn.textContent = 'Press Ctrl+C';
+      });
+    } catch (e) {
+      selectName();
+      copyBtn.textContent = 'Press Ctrl+C';
+    }
+  });
+})();
+</script>
+
+</body></html>
